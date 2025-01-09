@@ -2,12 +2,23 @@
 #include <string>
 using namespace std;
 
+// Функция, проверяющая, является ли строка числом
+bool isValidNumber(const string& str) {
+    if (str.empty()) return false; // Проверка на пустую строку
+    for (char c : str) {
+        if (!isdigit(c)) { // Если есть хотя бы один нецифровой символ
+            return false;
+        }
+    }
+    return true;
+}
+
 // Функция для заполнения массива длинных целых чисел из строки
 void fillArray(long long* array, const string& str, int parts) {
     int index = 0;
     // Цикл для извлечения подстрок из строки
     for (int i = str.length(); i > 0; i -= 9) {
-        // Извлекаюм подстроку длиной до 9 символов
+        // Извлекаю подстроку длиной до 9 символов
         string substring = str.substr(max(0, i - 9), min(9, i));
         // Преобразую подстроку в long long и сохраняю в массив
         array[index++] = stoll(substring);
@@ -18,14 +29,14 @@ void fillArray(long long* array, const string& str, int parts) {
 long long gcd(long long a, long long b) {
     // Алгоритм Евклида для нахождения НОД
     while (b != 0) {
-        long long temp = b; 
-        b = a % b; 
-        a = temp; 
+        long long temp = b;
+        b = a % b;
+        a = temp;
     }
-    return a; // Возвращаю НОД
+    return a; // Возвращаем НОД
 }
 
-// Функция для нахождения НОД трех чисел
+// Функция для нахождения НОД трёх чисел
 long long gcdOfThree(long long* a, long long* b, long long* c, int parts) {
     // Нахождение НОД между первым и вторым числами
     long long result = gcd(a[0], b[0]);
@@ -34,33 +45,47 @@ long long gcdOfThree(long long* a, long long* b, long long* c, int parts) {
     return result; // Возвращаю НОД
 }
 
-
 int main() {
     setlocale(LC_ALL, "RU");
 
-   
     string s1, s2, s3;
     cout << "Нахождение наибольшего общего делителя трёх чисел (m, n, p >= MaxInt)" << endl;
 
-   
     cout << "Введите первое число m: ";
-    cin >> s1; 
-    cout << "Введите второе число n: ";
-    cin >> s2; 
-    cout << "Введите третье число p: ";
-    cin >> s3; 
+    cin >> s1;
+    while (!isValidNumber(s1)) {
+        cerr << "Ошибка: Введите корректное число m (только цифры)! ";
+        cin >> s1;
+    }
 
-    // Определяю максимальную длину среди трех введенных чисел
-    int maxLength = max({ s1.length(), s2.length(), s3.length() });
-    // Вычисляю количество частей, необходимых для хранения чисел
+    cout << "Введите второе число n: ";
+    cin >> s2;
+    while (!isValidNumber(s2)) {
+        cerr << "Ошибка: Введите корректное число n (только цифры)! ";
+        cin >> s2;
+    }
+
+    cout << "Введите третье число p: ";
+    cin >> s3;
+    while (!isValidNumber(s3)) {
+        cerr << "Ошибка: Введите корректное число p (только цифры)! ";
+        cin >> s3;
+    }
+
+    // Определяем максимальную длину среди трёх введённых чисел
+    int maxLength = s1.length();
+    if (s2.length() > maxLength) maxLength = s2.length();
+    if (s3.length() > maxLength) maxLength = s3.length();
+
+    // Вычисляем количество частей
     int parts = (maxLength + 8) / 9;
 
-    // Создаю массивы для хранения чисел
-    long long a[parts] = { 0 }; 
-    long long b[parts] = { 0 }; 
-    long long c[parts] = { 0 };
+    // Создаём динамические массивы для хранения чисел
+    long long* a = new long long[parts]();
+    long long* b = new long long[parts]();
+    long long* c = new long long[parts]();
 
-    // Заполняю массивы, разбивая строки на секции по 9 цифр
+    // Заполняем массивы, разбивая строки на секции по 9 цифр
     fillArray(a, s1, parts);
     fillArray(b, s2, parts);
     fillArray(c, s3, parts);
@@ -70,5 +95,12 @@ int main() {
 
     // Вывод результата на экран
     cout << "Наибольший общий делитель: " << result << endl;
+
+    // Освобождение выделенной памяти
+
+    delete[] a;
+    delete[] b;
+    delete[] c;
+
     return 0;
 }
