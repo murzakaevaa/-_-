@@ -24,7 +24,7 @@
 
 
 3. long long gcd(long long a, long long b)
--Находит наибольший общий делитель (НОД) двух чисел a и b с помощью алгоритма Евклида.
+- Находит наибольший общий делитель (НОД) двух чисел a и b с помощью алгоритма Евклида.
 
 
  4. long long gcdOfThree(long long* a, long long* b, long long* c, int parts)
